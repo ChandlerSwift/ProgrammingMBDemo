@@ -6,45 +6,53 @@
 #define GREEN_BTN 4
 #define BLUE_BTN 6
 
-bool buttonStates[] = {false, false, false};
+//enum Winner { PLAYER_1, PLAYER_2 };
+//Winner winner;
 
 void setup() {
   pinMode(RED_BTN, INPUT_PULLUP);
   pinMode(GREEN_BTN, INPUT_PULLUP);
   pinMode(BLUE_BTN, INPUT_PULLUP);
 
-  // ADD OUTPUTS HERE
+  pinMode(RED_LED, OUTPUT);
+  pinMode(GREEN_LED, OUTPUT);
+  pinMode(BLUE_LED, OUTPUT);
 }
 
 void loop() {
-  /* BEGIN BUTTON PROCESSING CODE */
-  if (digitalRead(RED_BTN) != buttonStates[0]) {
-    buttonStates[0] = digitalRead(RED_BTN);
-    if (buttonStates[0])
-      buttonOneOnPress();
-  }
-  if (digitalRead(GREEN_BTN) != buttonStates[1]) {
-    buttonStates[1] = digitalRead(GREEN_BTN);
-    if (buttonStates[1])
-      buttonTwoOnPress();
-  }
-  if (digitalRead(BLUE_BTN) != buttonStates[2]) {
-    buttonStates[2] = digitalRead(BLUE_BTN);
-    if (buttonStates[2])
-      buttonThreeOnPress();
-  }
-  /* END BUTTON PROCESSING CODE */
-}
+  // wait for start button press
+  while (digitalRead(GREEN_BTN)) ;;
 
-void buttonOneOnPress() {
-  // Called when Button One is pressed
-}
+  // clear all lights
+  digitalWrite(RED_LED, LOW);
+  digitalWrite(GREEN_LED, LOW);
+  digitalWrite(BLUE_LED, LOW);
 
-void buttonTwoOnPress() {
-  // Called when Button Two is pressed
-}
+  // delay random time; make sure there aren't premature button presses
+  long timeToWait = random(3000, 10000); // 3-10 seconds
+  long startTime = millis();
+  long endTime = startTime + timeToWait;
+  while (millis() < endTime) {
+    if (!digitalRead(RED_BTN)) { // Red pushed too early!
+      digitalWrite(BLUE_LED, HIGH);
+      return;
+    } else if (!digitalRead(BLUE_BTN)) {
+      digitalWrite(RED_LED, HIGH);
+      return;
+    }
+  }
 
-void buttonThreeOnPress() {
-  // Called when Button Three is pressed
+  // light green LED
+  digitalWrite(GREEN_LED, HIGH);
+
+  // wait for first button press
+  while (digitalRead(RED_BTN) && digitalRead(BLUE_BTN)) ;;
+
+  // light LED of winner
+  if (!digitalRead(RED_BTN))
+    digitalWrite(RED_LED, HIGH);
+  else
+    digitalWrite(BLUE_LED, HIGH);
+
 }
 
