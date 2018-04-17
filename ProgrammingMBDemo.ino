@@ -6,14 +6,20 @@
 #define GREEN_BTN 4
 #define BLUE_BTN 6
 
-bool buttonStates[] = {false, false, false};
+bool buttonStates[] = {true, true, true};
+
+int redBrightness = 0;
+int greenBrightness = 0;
+int blueBrightness = 0;
 
 void setup() {
   pinMode(RED_BTN, INPUT_PULLUP);
   pinMode(GREEN_BTN, INPUT_PULLUP);
   pinMode(BLUE_BTN, INPUT_PULLUP);
 
-  // ADD OUTPUTS HERE
+  analogWrite(RED_LED, redBrightness);
+  analogWrite(GREEN_LED, greenBrightness);
+  analogWrite(BLUE_LED, blueBrightness);
 }
 
 void loop() {
@@ -37,14 +43,17 @@ void loop() {
 }
 
 void buttonOneOnPress() {
-  // Called when Button One is pressed
+  redBrightness = (redBrightness + 16) % 256;
+  analogWrite(RED_LED, redBrightness);
 }
 
 void buttonTwoOnPress() {
-  // Called when Button Two is pressed
+  greenBrightness = (greenBrightness + 16) % 256;
+  analogWrite(GREEN_LED, greenBrightness);
 }
 
 void buttonThreeOnPress() {
-  // Called when Button Three is pressed
+  blueBrightness = (blueBrightness + 16) % 256;
+  analogWrite(BLUE_LED, blueBrightness);
 }
 
